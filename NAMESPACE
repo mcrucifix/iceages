@@ -1,0 +1,13 @@
+useDynLib(iceages)
+export(read_astro, propagate_1step_D, propagate_1step_S)
+export(propagate_1step_D_multicore)
+export(propagate_d)
+export(propagate_s)
+export(lyapunov, rayleigh)
+export(pullback_d)
+export(stroboscopic_d)
+export(insol_ts)
+export(basin)
+export(compute_cluster)
+
+
