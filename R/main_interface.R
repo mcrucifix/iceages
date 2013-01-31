@@ -107,12 +107,12 @@ propagate_s <- function(model,times, init, par, Astro, seed=01425, deltat=.1, is
 pullback_d <- function (model, par, Astro, t_back=-500, times=seq(0,100,0.2), ...  )
  { 
    t_0 <- times[1]
-   K <- basin(model,par, t_back, t_0, Astro)
+   K <- basin(model,par, t_back, t_0, Astro,...)
 
    S <- list()
    for (i in (1:K$nck))  
      { cat(sprintf('attractor %i \n', i))
-       S[[i]] <- propagate_d(model, times, K$clusters[i,],  par, Astro )
+       S[[i]] <- propagate_d(model, times, K$clusters[i,],  par, Astro,... )
      }
    return(list(K=K,S=S))
  }

@@ -33,6 +33,7 @@ if (is.null(initgrid)) initgrid <- model$initgrid
 init <- as.matrix(expand.grid(initgrid))
 N    <- nrow(init)
 par = t(matrix(rep(par,N), ncol=N, nrow=length(par)))
+
 state =  propagate_1step_D(model, N, init, par, tback, t0, Astro=Astro,...)$state
 clusters = cluster(state, tol=tol)
 NCL = clusters$nck

@@ -50,7 +50,7 @@ s91_d = list (func='s91_f', name = 'Saltzman - Maasch 1991' ,
                spar = c(gamma = 1.0, omega = 1.0) ,
                initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
 
-pp04_d = list (func='pp04_f', name = 'Saltzman - Maasch 1991' , 
+pp04_d = list (func='pp04_f', name = 'Paillard - Parrenin 2004' , 
                spar = c(gamma = 1.0, omega = 1.0, alpha=0.15, d=0.27, aa=0.4, bb=0.7) ,
                initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
 
@@ -76,6 +76,11 @@ i11_altered_d = list (func='i11_altered_f', name = 'Imbrie et al. _altered_ 2011
 pp12_d = list (func='pp12_f', name = 'Parrenin and Paillard, 2012' , 
                spar = c(gamma = 1.0, omega = 1.0) ,
                initgrid = list(x=seq(0,120,3), y=c(0,1))), 
+
+pp12h_d = list (func='pp12h_f', name = 'Parrenin and Paillard, 2012 (*)' , 
+               spar = c(gamma = 1.0, omega = 1.0) ,
+               initgrid = list(x=seq(0,120,3), y=c(0,1))), 
+
 
 cr12_d = list (func='cr12_f', name = 'Crucifix et al. 2012' , 
                spar = c(alpha = 30., beta0 = 0.1894, beta1 = 0, 

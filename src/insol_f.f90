@@ -58,7 +58,10 @@
 ! Summer Solstice Insolation at 65 degrees North
 ! may be obtained as follows (normalised)
 
-! 0.7639 * FORCING(1) + 0.4756 * FORCING(5)
+! 0.7639 * FORCING(1) + 0.4756 * FORCING(3)
+! (or, assuming that FORCING(1) and FORCING(3)
+! have first been normalised , we can rewrite as
+! 0.8949 * ( 0.8536  * FORCING(1) ) + 0.4346 * (1.094381 * FORCING (3))
 
 ! Author : M. Crucifix, Summer 2011. 
 

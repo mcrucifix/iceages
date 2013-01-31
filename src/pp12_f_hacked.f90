@@ -37,30 +37,14 @@
 ! 
 ! \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-function  f ( x )
-  double precision f,x
-  double precision, parameter  :: a    = 0.68034
-  if (x > 0) then 
-     f = x
-  else
-     f = x + sqrt ( 4 * a * a + x * x ) - 2 * a
-  endif
-  f =  f 
-end function
 
-function dfdx ( x )
-  double precision dfdx, x
-  double precision, parameter  :: a    = 0.68034
-  if (x > 0) then 
-     dfdx = 1
-  else
-     dfdx = 1 + x / sqrt ( 4 * a * a + x * x ) 
-  endif
-  dfdx =  dfdx 
-end function
+! hacked version, where the thresold for glacial
+! inception also depends on 'v' and not only
+! on the astronomical forcing
+! see article 'Why ice ages could be unpredictable"
+! for details. 
 
-
-subroutine pp12_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
+subroutine pp12h_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
 
   implicit none
   integer k,j,l,m
@@ -132,8 +116,8 @@ subroutine pp12_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
   v = state(:,1)
   s = state(:,2)
    
-  ! needed to reproduce results exactly (small shift of obliquity
-  ! because the oblquity means were not calculated over the same periods. 
+ ! needed to reproduce results exactly (small shift of obliquity
+ ! because the oblquity means were not calculated over the same periods. 
  !   cfobl = forcing(3) - 0.0298181
  !  cfobl = forcing(3) + 0.0498181
   cfobl = forcing(3) 
@@ -161,7 +145,9 @@ subroutine pp12_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
               + ko * ggo * cfobl
 
   
-  where (s > .5 .and. (threshold  < v1) )  s = 0.     ! "enter glaciation"
+  ! where (s > .5 .and. (threshold  < v1) )  s = 0.     ! "enter glaciation"
+  ! here is the hack : 
+  where (s > .5 .and. (v  < v1) )  s = 0.             ! "enter glaciation"
   where (s < .5 .and. (threshold + v >  v0) )  s = 1. ! "enter deglaciation"
 
   kk1 = - aesi * ifpre - aeco * ifcpre - ao * ifobl

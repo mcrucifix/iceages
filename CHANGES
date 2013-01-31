@@ -1,0 +1,3 @@
+0.1 : initial commit
+0.1.1 : corrected errors in the pp12 routine (normalised insolations) and
+        also documented the existence of two distinct parameter sets for this model

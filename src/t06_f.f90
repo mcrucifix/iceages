@@ -65,7 +65,8 @@ subroutine t06_f(state,n,ndim,npar,par,f, dfdt, deltat,dy,ds,dl)
  ! double precision, parameter :: sm = 0.03*1e-9*86400*360*10000
 
 
-
+ ! to do : include comment about the units of p0, s,  and sm 
+ ! and the role of th scaling factor. 
 
   do m=1,n
 
