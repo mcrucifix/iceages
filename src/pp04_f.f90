@@ -64,7 +64,9 @@ subroutine pp04_f(state,n,ndim,npar,par,f,dfdt,deltat,dy,ds,dl)
     double precision, parameter :: taua = 1.2
     ! other constants
     double precision, parameter :: xx   = 1.3
-    double precision, parameter :: yy   = 0.5
+    ! double precision, parameter :: yy   = 0.5
+    ! sensitivity test
+    double precision, parameter :: yy   = 0.4
     double precision, parameter :: zz   = 0.8
 
     ! double precision, parameter :: alpha = 0.15
@@ -74,12 +76,7 @@ subroutine pp04_f(state,n,ndim,npar,par,f,dfdt,deltat,dy,ds,dl)
     double precision, parameter :: beta  = 0.5
     double precision, parameter :: ggamma = 0.5
     double precision, parameter :: ddelta = 0.4
-    ! aa now passed as a parameter 
-    ! NOTA : 
-    ! original value = 0.3, but needed to be adjusted
-    ! to approximately reproduce their results
-    ! cf. pers. communication by Paillard
-    ! acknowledging error in manuscript
+    ! aa  and bb now passed as parameters
     double precision, dimension(n) :: aa
     ! double precision, parameter :: aa = 0.40
     ! double precision, parameter :: bb = 0.7

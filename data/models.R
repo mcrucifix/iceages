@@ -51,7 +51,7 @@ s91_d = list (func='s91_f', name = 'Saltzman - Maasch 1991' ,
                initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
 
 pp04_d = list (func='pp04_f', name = 'Paillard - Parrenin 2004' , 
-               spar = c(gamma = 1.0, omega = 1.0, alpha=0.15, d=0.27, aa=0.4, bb=0.7) ,
+               spar = c(gamma = 1.0, omega = 1.0, alpha=0.15, d=0.27, aa=0.3, bb=0.7) ,
                initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
 
 
