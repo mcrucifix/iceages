@@ -65,6 +65,8 @@ propagate_d <- function(model,times, init, par, Astro,...)
 {  
   ndim <- length(init)
   state <- init
+  # copy times and make sure they are numeric 
+  times <- as.numeric(times)
   state_out=matrix(0, nrow=length(times), ncol=ndim)
   state_out[1,] = init
 
@@ -86,6 +88,8 @@ propagate_s <- function(model,times, init, par, Astro, seed=01425, deltat=.1, is
 {  
   ndim <- length(init)
   state <- init
+  # copy times and make sure they are numeric 
+  times <- as.numeric(times)
   state_out=matrix(0, nrow=length(times), ncol=ndim)
   state_out[1,] = init
   set.seed(seed)

@@ -34,7 +34,7 @@ subroutine cr12_s (n, ndim, npar, state, par, dt,sdt, f, dfdt,u1, u2, dy)
 
   ! interface
   implicit none
-  integer, intent(in) ::  n, ndim, npar ! (expect : ndim=2, npar = 6)
+  integer, intent(in) ::  n, ndim, npar ! (expect : ndim=2, npar = 10)
   double precision, intent(in), dimension(n,ndim), target ::  par,state
   double precision, intent(in), dimension (n) ::  dt,sdt, u1, u2
   double precision, intent(in), dimension(3) :: f, dfdt
@@ -54,6 +54,7 @@ subroutine cr12_s (n, ndim, npar, state, par, dt,sdt, f, dfdt,u1, u2, dy)
                                             sigmax, sigmay, omega, x, y 
 
   dadx=0.
+  dadt=0.
 
   b = 0.
 
@@ -68,6 +69,7 @@ subroutine cr12_s (n, ndim, npar, state, par, dt,sdt, f, dfdt,u1, u2, dy)
   omega     => par(:,8)
   sigmax    => par(:,9)
   sigmay    => par(:,10)
+
 
   x    => state(:,1)
   y    => state(:,2)

@@ -99,7 +99,10 @@ subroutine propagate_s (n, state, par, scaletime, t0, t1, deltat, ix, nap, nao, 
   ! main time loop
 
   dt = deltat / scaletime
+!  dt = deltat 
   sdt = sqrt(dt)
+
+
 
   do i=1,imax
 

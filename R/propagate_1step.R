@@ -90,5 +90,5 @@ function (model="vdp_s",
       Ns <- size_npar_nrow (N,state,par)
       func <- getNativeSymbolInfo(model$func)$addr
       if (is.matrix(par))  scaletime = par[,'omega'] else scaletime = par['omega']
-      .Call("c_propagate_s", func, Ns, state, par, scaletime, told, tnew, deltat, ix, isum, Astro)
+      .Call("c_propagate_s", func, Ns, state, par, as.numeric(scaletime), told, tnew, deltat, ix, isum, Astro)
    }

@@ -38,8 +38,9 @@
 
   ! interface
   implicit none
-  integer, intent(in) ::  n, ndim, npar ! (expect : ndim=2, npar = 6)
-  double precision, intent(in), dimension(n,ndim) ::  par,state,dadt, a, b
+  integer, intent(in) ::  n, ndim, npar ! 
+  double precision, intent(in), dimension(n,ndim) ::  state,dadt, a, b
+  double precision, intent(in), dimension(n,npar) ::  par
   double precision, intent(in), dimension(n,ndim,ndim) ::  dadx
   double precision, intent(in), dimension (n) :: dt,sdt,dw
   double precision, intent(out), dimension(n,ndim) :: dy
@@ -60,13 +61,11 @@
 
 
 !    now constructs the right hand side vector
-      
     forall (i=1:ndim)  
      rhs (:,i) =  state(:,i) + (a(:,i) - 0.5*(dadx(:,i,1)*state(:,1) &
                      + dadx(:,i,2)*state(:,2) -dadt(:,i) * dt)) * dt &
                      + b(:,i) * dw(:) *sdt
     end forall
-
 !     now the equation to be solved is  amat * x = rhs
 !     use lapack
 
@@ -78,6 +77,5 @@
     enddo
 
     dy = rhs - state
-
     end
  

@@ -49,7 +49,9 @@ subroutine vdp_s (n, ndim, npar, state, par, dt,sdt, f, dfdt, u1, u2, dy)
   ! aliases for parameters and state
   double precision, pointer, dimension(:) ::  alpha,beta, gammapre, &
                                                gammaobl, sigma
+
   dadx=0.
+  dadt=0.
 
   b = 0.
 
@@ -82,7 +84,6 @@ subroutine vdp_s (n, ndim, npar, state, par, dt,sdt, f, dfdt, u1, u2, dy)
 
   dw = u1
   call si_stoch(n,ndim,npar,state,par,a, dadx, dadt, b,dt,sdt,dw, dy)
-
 end subroutine vdp_s
 
 

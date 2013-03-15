@@ -210,7 +210,7 @@ extern readfunc read_precession_ ;
 
   state = NUMERIC_POINTER (OSstate);
   par =  NUMERIC_POINTER (Spar);
-  scaletime =  NUMERIC_POINTER (Sscaletime);
+  scaletime =  NUMERIC_POINTER (AS_NUMERIC(Sscaletime));
 
   t0 =  NUMERIC_POINTER (St0);
   t1 =  NUMERIC_POINTER (St1);
