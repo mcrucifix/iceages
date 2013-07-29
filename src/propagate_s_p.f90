@@ -25,10 +25,20 @@
 !! Fortran 95 norm
 !! ------------------------------------------------------------------
 
+!! modif history
+!!  18 march 2013 : add rmean optional parameter 
+!!                  useful for proposals in particle filter algorithms
+
+!!  20 march 2013 : go for multidimensional u1 and u2 (n x ndim)
+!!                  and rmean is accordingly a ndim-vector
+!!                  isum facility temporarily discarded
+
+!!  22 march 2013 : output generated wiener processes
+
 subroutine propagate_s (n, state, par, scaletime, t0, t1, deltat, ix, nap, nao,  &
                         amppre, omepre, angpre,  &
                         ampobl, omeobl, angobl,  & 
-                        ndim, npar, model_s, isum)
+                        ndim, npar, model_s, isum, rmean, dw)
 
 !     MAIN ROUTINE CALLED FROM R 
 !     IN PARAMETERS 
@@ -55,7 +65,9 @@ subroutine propagate_s (n, state, par, scaletime, t0, t1, deltat, ix, nap, nao, 
   double precision, intent(in) :: par(n,ndim), scaletime(n)
   double precision, intent(in), dimension (nap)  ::  amppre, omepre, angpre
   double precision, intent(in), dimension (nao)  ::  ampobl, omeobl, angobl
+  double precision, intent(in), dimension (ndim), optional :: rmean
   double precision, intent(inout) :: state(n,ndim)
+  double precision, intent(inout) :: dw(n,ndim)
 
   external model_s
 
@@ -68,12 +80,12 @@ subroutine propagate_s (n, state, par, scaletime, t0, t1, deltat, ix, nap, nao, 
       double precision, intent(in), dimension(n,ndim), target ::  par,state
       double precision, intent(in), dimension (n) ::  dt, sdt
       double precision, intent(in), dimension(3) :: f, dfdt
-      double precision, intent(in), dimension(n) :: u1, u2
+      double precision, intent(in), dimension(n,ndim) :: u1, u2
       double precision, intent(out) ::  dy(n,ndim)
     end subroutine model_s
   end interface
 
-  integer i,j,l, imax
+  integer i,j,k, imax
 
   ! internal (time step)
   double precision :: t, deltat_adjusted
@@ -85,7 +97,7 @@ subroutine propagate_s (n, state, par, scaletime, t0, t1, deltat, ix, nap, nao, 
   ! note that u2 is presently a dummy (not in use)
   integer, parameter :: nwork=1e4
   double precision dwork(nwork)
-  double precision, dimension(n*isum) :: u1, u2
+  double precision, dimension(n*isum, ndim) :: u1, u2
 
 
   ! ------- end variable declaration -----------  ! 
@@ -102,26 +114,47 @@ subroutine propagate_s (n, state, par, scaletime, t0, t1, deltat, ix, nap, nao, 
 !  dt = deltat 
   sdt = sqrt(dt)
 
-
-
+! dw = sum of random numbers generated
+!        will be used to compute prior / proposal probabilities
+  
   do i=1,imax
 
     t = t0+(i-1)*deltat_adjusted
     call astro(nap, nao, t,amppre, omepre, angpre, ampobl, omeobl, angobl, f, dfdt )
-    call rannw(0.d0, 1.d0, ix, u1, n*isum, dwork, nwork)
+    call rannw(0.d0, 1.d0, ix, u1, n*ndim, dwork, nwork)
+
+   
+    ! ------------------------------------------
+    ! NOTE : ISUM FACILITY NEEDS TO BE RE-CHECKED
+    ! ------------------------------------------
 
     ! if the user wants to do a brownian tree 
     if (isum .gt. 1) then
-     do j=1,n
-      u1(j) = sum(u1( ( (j-1)*isum+1 ) : j*isum ) ) 
-     enddo
+     do k=1, ndim
+      do j=1,n
+       u1(j,k) = sum(u1( ( (j-1)*isum+1 ) : j*isum , k) ) 
+      enddo
+     enddo 
      u1 = u1 / sqrt(real(isum))
+    endif 
+
+
+    if(present(rmean)) then
+     do k=1,ndim
+      u1(1:n, k)= u1(1:n,k) + rmean(k)
+     enddo
     endif
+
+
+
+    do k=1,ndim
+      dw(:,k) = dw(:,k) + u1(1:n,k)*sdt
+    enddo 
 
     call model_s (n, ndim, npar, state, par, dt,sdt, f, dfdt, u1, u2, dy)
     state = state + dy
 
-  enddo
+  enddo ! i
  end 
  
 

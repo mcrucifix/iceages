@@ -25,6 +25,11 @@
  C code  for R
  ------------------------------------------------------------------ */
 
+/* modif history
+ * 18 march 2013 : implemented rmean optional parameter
+ *                 for propagate_s 
+ * 22 march 2013 : stochastic propagator outputs the generated
+ *                 wiener increments */
 #include <R.h>
 #include <Rdefines.h>  
 #include <stdio.h>
@@ -46,7 +51,6 @@ extern void propagate_d_ (int *, double [], double [], double *,  double *,
                        int *, int *, ddt_det, double *);
 
 
-/* extern void propagate_s (n, state, par, t0, t1,deltat, ix, nap, nao, ndim, npar) */
 
 extern void propagate_s_ (int *, double [], double [], double[], 
                           double *, double *,  double *, 
@@ -54,7 +58,7 @@ extern void propagate_s_ (int *, double [], double [], double[],
                           int *, int *,                     /* nap, nao */
                           double [], double [], double [],  /* astronomical forcing */
                           double [], double [], double [],  /* astronomical forcing */
-                          int *, int *,  ddt_sto, int* );
+                          int *, int *,  ddt_sto, int*, double [], double[] );
                       
                           
 
@@ -191,26 +195,29 @@ extern readfunc read_precession_ ;
  SEXP c_propagate_s  (SEXP Sfunc, SEXP SNs, 
                       SEXP Sstate , SEXP Spar, SEXP Sscaletime,
                       SEXP St0, SEXP St1, SEXP Sdeltat, SEXP Six, SEXP Sisum,
-                      SEXP SAstroList)
+                      SEXP SAstroList, SEXP Srmean, SEXP Sdw)
 {
 
   ddt_sto * func = (ddt_sto * ) R_ExternalPtrAddr(Sfunc); 
   int *n, *nap, *nao, *npar, *ndim, *ix, *isum;
   double *amppre, *omepre, *angpre ;
   double *ampobl, *omeobl, *angobl ;
-  double *t0, *t1, *deltat, *state, *par, *scaletime;
+  double *t0, *t1, *deltat, *state, *par, *scaletime, *rmean, *dw;
 
-  SEXP list, list_names,  OSstate;
+  SEXP list, list_names,  OSstate, OSdw;
 
   n    = INTEGER_POINTER (AS_INTEGER ( VECTOR_ELT(SNs, 0)));
   npar = INTEGER_POINTER (AS_INTEGER (VECTOR_ELT(SNs, 1)));
   ndim = INTEGER_POINTER (AS_INTEGER (VECTOR_ELT(SNs, 2)));
 
-  PROTECT (OSstate = duplicate(Sstate));
+  PROTECT (OSstate = duplicate(Sstate ));
+  PROTECT (OSdw = duplicate(Sdw ));
 
-  state = NUMERIC_POINTER (OSstate);
+  state  = NUMERIC_POINTER (OSstate);
+  dw = NUMERIC_POINTER (OSdw);
   par =  NUMERIC_POINTER (Spar);
   scaletime =  NUMERIC_POINTER (AS_NUMERIC(Sscaletime));
+  rmean     =  NUMERIC_POINTER (AS_NUMERIC(Srmean));
 
   t0 =  NUMERIC_POINTER (St0);
   t1 =  NUMERIC_POINTER (St1);
@@ -229,15 +236,16 @@ extern readfunc read_precession_ ;
   angobl = NUMERIC_POINTER (VECTOR_ELT(SAstroList, 7));
   propagate_s_ (n , state, par , scaletime, t0, t1, deltat, ix,
             nap, nao, amppre, omepre, angpre, ampobl, omeobl, angobl,
-            ndim, npar, func, isum);    
+            ndim, npar, func, isum, rmean, dw);    
 
-  PROTECT(list = allocVector(VECSXP, 1));
-  PROTECT(list_names = allocVector(STRSXP, 1));
+  PROTECT(list = allocVector(VECSXP, 2));
+  PROTECT(list_names = allocVector(STRSXP, 2));
 
   SET_VECTOR_ELT(list, 0, OSstate);    SET_STRING_ELT(list_names,0,mkChar("state"));
+  SET_VECTOR_ELT(list, 1, OSdw);   SET_STRING_ELT(list_names,1,mkChar("dw"));
  
   setAttrib(list, R_NamesSymbol, list_names); //and attaching the vector names
-  UNPROTECT (3) ;
+  UNPROTECT (4) ;
   return(list);
 } ;
 

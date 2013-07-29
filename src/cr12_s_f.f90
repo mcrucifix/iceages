@@ -28,6 +28,8 @@
 ! --------------------------------
 ! STOCHASTIC VERSION OF CR12_F
 ! See documentation in that file
+
+! modif 20.03.13 : u1 and dw go n x ndim 
 ! --------------------------------
 
 subroutine cr12_s (n, ndim, npar, state, par, dt,sdt, f, dfdt,u1, u2, dy)
@@ -36,13 +38,13 @@ subroutine cr12_s (n, ndim, npar, state, par, dt,sdt, f, dfdt,u1, u2, dy)
   implicit none
   integer, intent(in) ::  n, ndim, npar ! (expect : ndim=2, npar = 10)
   double precision, intent(in), dimension(n,ndim), target ::  par,state
-  double precision, intent(in), dimension (n) ::  dt,sdt, u1, u2
+  double precision, intent(in), dimension (n,ndim) ::  dt,sdt, u1, u2
   double precision, intent(in), dimension(3) :: f, dfdt
   double precision, intent(out) ::  dy(n,ndim)
   ! end interface
 
   ! internal, will be passed to stochastic integrator
-  double precision, dimension(n) :: dw
+  double precision, dimension(n,ndim) :: dw
   double precision, dimension(n,ndim) :: a, b, dadt
   double precision, dimension(n,ndim,ndim) :: dadx
 

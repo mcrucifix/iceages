@@ -24,7 +24,7 @@
 !! ------------------------------------------------------------------
 !! Fortran 95 norm
 !! ------------------------------------------------------------------
-
+! modif 20.03.13 : u1, u2 and dw go n x ndim
 ! stocastic version of vdp_f.
 ! see references in that file
 
@@ -37,12 +37,12 @@ subroutine vdp_s (n, ndim, npar, state, par, dt,sdt, f, dfdt, u1, u2, dy)
   double precision, intent(in), dimension(n,ndim), target ::  par,state
   double precision, intent(in), dimension (n) ::  dt,sdt
   double precision, intent(in), dimension(3) :: f, dfdt
-  double precision, intent(in), dimension(n) :: u1, u2
+  double precision, intent(in), dimension(n,ndim) :: u1, u2
   double precision, intent(out) ::  dy(n,ndim)
   ! end interface
 
   ! internal, will be passed to stochastic integrator
-  double precision, dimension(n) :: dw
+  double precision, dimension(n,ndim) :: dw
   double precision, dimension(n,ndim) :: a, b, dadt
   double precision, dimension(n,ndim,ndim) :: dadx
 

@@ -25,6 +25,10 @@
 # R Code developed for R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 # ------------------------------------------------------------------ 
 
+# modif history
+# 22 march : manages input/output of Wiener process increment (dw)
+#            in stochastic propagator
+
 propagate_1step_D <-
 function (model="t06_f", 
       N, state, par, told, tnew, icalclyap=as.integer(0), ds=0., lyap=0., deltat=0.003, Astro=NULL) 
@@ -85,10 +89,19 @@ function ( model, N, state, par, told, tnew,
 
 propagate_1step_S <-
 function (model="vdp_s", 
-      N, state, par, told, tnew, ix,  deltat, isum=1, Astro) 
+      N, state, par, told, tnew, ix,  deltat, isum=1, Astro, rmean=NULL,dw=NULL) 
    {
+      # if dw not provided, initialise to zero with the same shape as state
       Ns <- size_npar_nrow (N,state,par)
+      if (is.vector(par)) 
+       { names_par <- names(par) 
+         par <- matrix(par, Ns$N, length(par), byrow=TRUE)
+         colnames(par) <- names_par
+       }
+      if (is.null(dw)) dw = as.numeric(state*0.) 
+      if (is.null(rmean)) rmean = rep(0.,Ns$ndim)
       func <- getNativeSymbolInfo(model$func)$addr
       if (is.matrix(par))  scaletime = par[,'omega'] else scaletime = par['omega']
-      .Call("c_propagate_s", func, Ns, state, par, as.numeric(scaletime), told, tnew, deltat, ix, isum, Astro)
+      .Call("c_propagate_s", func, Ns, state, par, as.numeric(scaletime), 
+                             told, tnew, deltat, ix, isum, Astro, rmean, dw)
    }

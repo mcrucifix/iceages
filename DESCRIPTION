@@ -1,7 +1,7 @@
 Package: iceages
 Type: Package
 Title: Ice age models and analysis
-Version: 0.1.1
+Version: 0.1.2
 Date: 2012-11-21
 Author: Michel Crucifix 
 Maintainer: Michel Crucifix <michel.crucifix@uclouvain.be>

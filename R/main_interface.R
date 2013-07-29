@@ -25,12 +25,12 @@
 # R Code developed for R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 # ------------------------------------------------------------------ 
 
-
-# produce an insolation time series
-# -------------------------------------
+# code modication history
+# allow optional parameters in propagate_s 
 
 
 insol_ts <- function(times,Astro)
+# produce an insolation time series
 {
 
   N=length(times)
@@ -84,7 +84,7 @@ propagate_d <- function(model,times, init, par, Astro,...)
 # time series from a stochastic model, with astro output
 # -------------------------------------------------------
 
-propagate_s <- function(model,times, init, par, Astro, seed=01425, deltat=.1, isum=1)
+propagate_s <- function(model,times, init, par, Astro, seed=01425, deltat=.1, isum=1,...)
 {  
   ndim <- length(init)
   state <- init
@@ -97,7 +97,7 @@ propagate_s <- function(model,times, init, par, Astro, seed=01425, deltat=.1, is
      {
       ix = as.integer(runif(1)*1000)+1
       state <- propagate_1step_S (model, NULL, state, par, times[i-1], 
-      times[i], ix, deltat, isum,  Astro=Astro)$state
+      times[i], ix, deltat, isum,  Astro=Astro,...)$state
       state_out[i,] <- state
      }
  
