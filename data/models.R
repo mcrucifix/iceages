@@ -46,8 +46,14 @@ s90_d = list (func='s90_f', name = 'Saltzman - Maasch 1990' ,
                spar = c(gamma = 1.0, omega = 1.0, w=0.5) ,
                initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
 
+s90_s = list (func='s90_s', name = 'Saltzman - Maasch 1990' , 
+               spar = c(gamma = 1.0, omega = 1.0, w=0.5, sigma=0.1) ,
+               initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
+
+
+
 s91_d = list (func='s91_f', name = 'Saltzman - Maasch 1991' , 
-               spar = c(gamma = 1.0, omega = 1.0) ,
+               spar = c(gamma = 1.0, omega = 1.0, p = 1.0, q = 2.5, r = 1.3, v = 0.2, s = 0.6) ,
                initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
 
 pp04_d = list (func='pp04_f', name = 'Paillard - Parrenin 2004' , 

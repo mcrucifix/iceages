@@ -10,7 +10,7 @@
 !! the following conditions:
 !!
 !! The above copyright notice and this permission notice shall be
-!! incluudedin all copies or substantial portions of the Software.
+!! includedin all copies or substantial portions of the Software.
 !!
 !! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 !! EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -61,13 +61,15 @@ subroutine s91_f(state,n,ndim,npar,par,f,dfdt,deltat,dy,ds,dl)
   double precision gamma(n), omega(n)
   
   !! parameters propre to saltzman and maasch
-  double precision p, q, r, v,  s,uu
-
-  parameter (p=1.0)
-  parameter (q=2.5)
-  parameter (r=1.3)
-  parameter (v=0.2)
-  parameter (s=0.6)
+  double precision p(n), q(n), r(n), v(n),  s(n)
+  double precision uu
+ 
+  
+!  parameter (p=1.0)
+!  parameter (q=2.5)
+!  parameter (r=1.3)
+!  parameter (v=0.2)
+!  parameter (s=0.6)
   parameter (uu=0.6)
 
    u  = state
@@ -76,6 +78,11 @@ subroutine s91_f(state,n,ndim,npar,par,f,dfdt,deltat,dy,ds,dl)
 
    gamma = par(:,1)
    omega = par(:,2)
+   p     = par(:,3)
+   q     = par(:,4)
+   r     = par(:,5)
+   v     = par(:,6)
+   s     = par(:,7)
 
    dt = deltat / omega
 
