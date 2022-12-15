@@ -50,8 +50,6 @@ s90_s = list (func='s90_s', name = 'Saltzman - Maasch 1990' ,
                spar = c(gamma = 1.0, omega = 1.0, w=0.5, sigma=0.1) ,
                initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
 
-
-
 s91_d = list (func='s91_f', name = 'Saltzman - Maasch 1991' , 
                spar = c(gamma = 1.0, omega = 1.0, p = 1.0, q = 2.5, r = 1.3, v = 0.2, s = 0.6) ,
                initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
@@ -60,11 +58,17 @@ pp04_d = list (func='pp04_f', name = 'Paillard - Parrenin 2004' ,
                spar = c(gamma = 1.0, omega = 1.0, alpha=0.15, d=0.27, aa=0.3, bb=0.7) ,
                initgrid = list(x=seq(-1.0,1.0,0.5), y=seq(-1.0,1.0,0.5), z=seq(-1.0,1.0,0.5))),
 
+vcv18_d = list (func='vcv18_f', name = 'Verbitsky Crucifix Volubeev 2018' , 
+               spar = c(gamma = 0.11, omega = 1.0) ,
+               initgrid = list(x=seq(0.1,25,5), y=seq(-5.0,5.0,0.5), z=seq(-1.0,1.0,0.5))),
+
+duffing_vdp_d = list (func='duffing_vdp_f', name = 'Duffing  van der Pol' , 
+               spar = c(kappa=1, mu=1, omega0=1, beta=1, gammapre=1, gammaobl=1, omega=1),
+               initgrid = list(x=seq(-1,1,0.5), y=seq(-1.0,1.0,0.5))),
 
 t06_d = list (func='t06_f', name = 'Tziperman et al. 2006' , 
                spar = c(gamma = 1.0, omega = 1.0, p0=0.26, s=0.23, sm=0.03) ,
                initgrid = list(x=seq(0,60,2), y=c(0,1))),
-
 
 i80_d = list (func='i80_f', name = 'Imbrie - Imbrie 1980' , 
                spar = c(gamma = 1.0, omega = 1.0) ,
@@ -88,6 +92,13 @@ pp12h_d = list (func='pp12h_f', name = 'Parrenin and Paillard, 2012 (*)' ,
                initgrid = list(x=seq(0,120,3), y=c(0,1))), 
 
 
+daruka_d = list (func='daruka_f', name = 'Daruka et al. 2016' , 
+               spar = c(alpha = .8, kappa = 1.3, 
+                        lambda = 1., 
+                        gammapre = 0.5000, gammaobl = 0.5000,
+                        omega = 1.000), 
+                        initgrid = list(x=seq(-1.5,1.5,0.5), y=seq(-1.5, 1.5, 0.5))),
+
 cr12_d = list (func='cr12_f', name = 'Crucifix et al. 2012' , 
                spar = c(alpha = 30., beta0 = 0.1894, beta1 = 0, 
                         beta2 = 0., delta = 0.2706, 
@@ -95,12 +106,23 @@ cr12_d = list (func='cr12_f', name = 'Crucifix et al. 2012' ,
                         omega = 1.000), 
                         initgrid = list(x=seq(-1.5,1.5,0.5), y=seq(-1.5, 1.5, 0.5))),
 
+
+
 cr12_s = list (func='cr12_s', name = 'Crucifix et al. 2012' , 
                spar = c(alpha = 30., beta0 = 0.1894, beta1 = 0, 
                         beta2 = 0., delta = 0.2706, 
                         gammapre = 0.1894, gammaobl = 0.1624,
                         omega = 1.000, sigmax=0., sigmay=0.), 
+                        initgrid = list(x=seq(-1.5,1.5,0.5), y=seq(-1.5, 1.5, 0.5))), 
+
+
+daruka_s = list (func='daruka_s', name = 'Daruka et al. 2016' , 
+               spar = c(alpha = .8, kappa = 1.3, 
+                        lambda = 1., 
+                        gammapre = 0.5000, gammaobl = 0.5000,
+                        omega = 1.000, sigmax=0., sigmay=0.), 
                         initgrid = list(x=seq(-1.5,1.5,0.5), y=seq(-1.5, 1.5, 0.5)))
+
 
 
 )

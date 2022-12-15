@@ -23,6 +23,7 @@ List of models, as follows:
 \item{\code{sm91_d} : }{Saltsman and Maasch (1991) 3-D model of ice ages}
 \item{\code{t06_d} : }{Tziperman et al. (2006) hybrid (1.5-D) model of ice ages}
 \item{\code{pp04_d} : }{Paillard and Parrenin (2004) 3-D model of ice ages}
+\item{\code{vcv18_d} : }{Verbitsky - Crucifix - Volubeev (2018) 3-D model of ice ages}
 \item{\code{pp12_d} : }{Parrenin and Palliard (2012) 1.5 D model of ice ages}
 \item{\code{i11_d} : }{Imbrie et al. (2011) 2-D model of ice ages}
 }

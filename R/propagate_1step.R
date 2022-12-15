@@ -98,7 +98,7 @@ function (model="vdp_s",
          par <- matrix(par, Ns$N, length(par), byrow=TRUE)
          colnames(par) <- names_par
        }
-      if (is.null(dw)) dw = as.numeric(state*0.) 
+      if (is.null(dw)) dw = state*0. 
       if (is.null(rmean)) rmean = rep(0.,Ns$ndim)
       func <- getNativeSymbolInfo(model$func)$addr
       if (is.matrix(par))  scaletime = par[,'omega'] else scaletime = par['omega']

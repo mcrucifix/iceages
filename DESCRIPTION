@@ -1,8 +1,8 @@
 Package: iceages
 Type: Package
 Title: Ice age models and analysis
-Version: 0.1.4
-Date: 2015-02-05
+Version: 0.1.7
+Date: 2022-04-07
 Author: Michel Crucifix 
 Maintainer: Michel Crucifix <michel.crucifix@uclouvain.be>
 Description: Support to paper Why ice ages could be unpredictable?

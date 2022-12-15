@@ -57,7 +57,7 @@ parameter (gp = 0.7639)
 parameter (go = 0.4756)
 
 ! variables for runge-kutta integration
-double precision kk1(n,ndim), kk2(n,ndim), kk3(n,ndim), kk4(n,ndim)
+double precision kk1(n,ndim)
 double precision u(n,ndim), dadu(n,ndim,ndim), dadt(n,ndim), du(n,ndim)
 
 
@@ -85,6 +85,8 @@ parameter (uu=0.6)
 
  dt = deltat / omega
 
+  f = gp*f(1) + go*f(3)
+  dfdt = gp*f(1) + go*f(3)
   !       first-order time derivatives
   kk1(:,1) =  - u(:,1) - u(:,2) - v*u(:,3) - uu * gamma * ( gp* f(1) + go*f(3) )
   kk1(:,2) =  -p * u(:,3) + r * u(:,2) + s * u(:,3)*u(:,3) - w*u(:,2)*u(:,3) - u(:,2)*u(:,3)*u(:,3)

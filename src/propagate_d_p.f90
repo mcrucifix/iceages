@@ -57,7 +57,7 @@ subroutine propagate_d (n, state, par, t0, t1,icalclyap, ds, &
   double precision, intent(inout) :: state(n,ndim),ds(n,ndim), lyap(n)
   double precision :: dy(n,ndim)
   double precision :: norm(n), dl(n,ndim)
-  double precision :: t,deltat_
+  double precision :: t,deltat_adjusted
   double precision :: forcing(3),dforcingdt(3)
 
   interface
@@ -73,19 +73,20 @@ subroutine propagate_d (n, state, par, t0, t1,icalclyap, ds, &
 
   !! adjusts imax to have an int. numb. of timesteps
   imax = max(int(((t1-t0)/deltat)+0.5),1)
-  deltat_  = (t1-t0)/imax     
+  deltat_adjusted  = (t1-t0)/imax     
 
 
 !!  call read_precession(nap,amppre,omepre, angpre)
 !!  call read_obliquity(nao,ampobl,omeobl, angobl)
 
+ ! 1.09.2017 : bug correction : deltat -> deltat_adjusted
 
   do i=1,(imax)
-    t = t0+(i-1)*deltat
+    t = t0+(i-1)*deltat_adjusted
     call astro(nap, nao, t,amppre, omepre, angpre, ampobl, omeobl, &
                angobl, forcing, dforcingdt)
 
-    call ddtlin_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat_,dy,ds,dl)
+    call ddtlin_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat_adjusted,dy,ds,dl)
 
     state = state +  dy
     if (icalclyap.eq.1) then 

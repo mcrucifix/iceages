@@ -110,14 +110,15 @@ subroutine propagate_s (n, state, par, scaletime, t0, t1, deltat, ix, nap, nao, 
 
   ! main time loop
 
-  dt = deltat / scaletime
+  dt = deltat_adjusted / scaletime
 !  dt = deltat 
   sdt = sqrt(dt)
 
-! dw = sum of random numbers generated
-!        will be used to compute prior / proposal probabilities
+! dw = sum of penalties due to imposing a drift rmean 
   
   do i=1,imax
+
+    ! 1.09.2017 : bug correction : deltat -> deltat_adjusted. MC. 
 
     t = t0+(i-1)*deltat_adjusted
     call astro(nap, nao, t,amppre, omepre, angpre, ampobl, omeobl, angobl, f, dfdt )
@@ -141,15 +142,12 @@ subroutine propagate_s (n, state, par, scaletime, t0, t1, deltat, ix, nap, nao, 
 
     if(present(rmean)) then
      do k=1,ndim
-      u1(1:n, k)= u1(1:n,k) + rmean(k)
+      u1(1:n, k)= u1(1:n,k) + rmean(k) * sdt
+      dw(1:n, k) =  dw(:,k) + (  - u1(1:n, k)**2   + &
+                              ( u1(1:n, k)- rmean(k) * sdt )**2  )
      enddo
     endif
 
-
-
-    do k=1,ndim
-      dw(:,k) = dw(:,k) + u1(1:n,k)*sdt
-    enddo 
 
     call model_s (n, ndim, npar, state, par, dt,sdt, f, dfdt, u1, u2, dy)
     state = state + dy

@@ -26,17 +26,16 @@
 !! ------------------------------------------------------------------
 
 ! \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-!  VANDERPOL WITH BETA PARAMETER
-!  Generalised to 2-well potential function for x
+!  Dufing van der pol oscillation
+!  Ongoingy study Crucifix - Ditlevsen - Mitsui
 !  RUNGE-KUTTA INTEGRATION
 !  TIME SCALE : 1 TIME UNIT = 10 KA
 !  DETERMINISTIC
 !  USES OBLIQUITY AND PRECESSION SEPARATELY
 !  AS FORCINGS (GAMMAP AND GAMMAO)
-!  AUTHOR : MICHEL CRUCIFIX
 ! \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-subroutine cr12_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
+subroutine duffing_vdp_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
 !
   implicit none
   integer, intent(in) ::  n
@@ -58,37 +57,36 @@ subroutine cr12_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
   double precision u(n,ndim), dadu(n,ndim,ndim)
   double precision dadt(n,ndim), du(n,ndim)
 
-  double precision, dimension(n) :: alpha, beta0, beta1, beta2, &
-                                    delta, gammapre, gammaobl, omega, f
+  double precision, dimension(n) :: kappa, mu, omega0, beta, omega,&
+                                    gammapre, gammaobl, f
       
 
   u  = state(:,:)
   du = ds(:,:)
 
-  alpha    = par(:,1)
-  beta0    = par(:,2)
-  beta1    = par(:,3)
-  beta2    = par(:,4)
-  delta    = par(:,5)
-  gammapre = par(:,6)
-  gammaobl = par(:,7)
-  omega    = par(:,8)
+  kappa    = par(:,1)
+  mu       = par(:,2)
+  omega0   = par(:,3)
+  beta     = par(:,4)
+  gammapre = par(:,5)
+  gammaobl = par(:,6)
+  omega    = par(:,7)
 
   dt = deltat / omega
 
   f =  gammapre * forcing(1) + gammaobl * forcing(3)
 
   !  first-order time derivatives
-  kk1(:,1)   =   beta0 + beta1 * u(:,1) - beta2 * (u(:,1)**3 - u(:,1) ) - delta * u(:,2) + f
-  kk1(:,2)   =   alpha * delta * ( u(:,1) - u(:,2)*u(:,2)*u(:,2) / 3. + u(:,2) )
+  kk1(:,1)   =   u(:,2) + kappa * u(:,1) - mu / 3. * u(:,1)*u(:,1)*u(:,1) 
+  kk1(:,2)   =   omega0 * u(:,1) - beta * u(:,1)*u(:,1)*u(:,1) + f
 
 
   !  jacobian for runge-kutta
 
-  dadu(:,1,1)  =  beta1 - beta2 * (3 * u(:,1)*u(:,1) - 1 ) 
-  dadu(:,1,2)  =  -1
-  dadu(:,2,1)  =  alpha * delta 
-  dadu(:,2,2)  =  alpha * delta * (- u(:,2) * u(:,2) + 1. ) 
+  dadu(:,1,1)  =  kappa - mu * u(:,1)*u(:,1)
+  dadu(:,1,2)  =  1.
+  dadu(:,2,1)  =  omega0 - 3 * u(:,1)*u(:,1) * beta
+  dadu(:,2,2)  =  0.
 
   !  differential elements for calculating lyapunov
 
@@ -96,8 +94,8 @@ subroutine cr12_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
   da(:,2) = dadu(:,2,1) * du(:,1) + dadu(:,2,2) * du(:,2)
 
   !  time derivatives for runge-kutta
-  dadt(:,1)  =  (gammapre * dforcingdt(1) + gammaobl * dforcingdt(3))  !!! suppressed da1dt on 08.03.2018
-  dadt(:,2)  = 0. 
+  dadt(:,2)  =  (gammapre * dforcingdt(1) + gammaobl * dforcingdt(3))  !!! suppressed da1dt on 08.03.2018
+  dadt(:,1)  = 0. 
 
   ! runge-kutta fourth order scheme
 

@@ -26,7 +26,7 @@
 !! ------------------------------------------------------------------
 
 ! \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-!  VANDERPOL WITH BETA PARAMETER
+!  DARUKA-DITLEVSEN MODEL (DUFFING OSCILLATOR)
 !  Generalised to 2-well potential function for x
 !  RUNGE-KUTTA INTEGRATION
 !  TIME SCALE : 1 TIME UNIT = 10 KA
@@ -36,11 +36,11 @@
 !  AUTHOR : MICHEL CRUCIFIX
 ! \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-subroutine cr12_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
+subroutine daruka_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
 !
   implicit none
   integer, intent(in) ::  n
-  integer, intent(in) :: ndim, npar !! expect ndim=2, npar=6
+  integer, intent(in) :: ndim, npar !! expect ndim=2, npar=3
   double precision, intent(in) :: par(n,npar),state(n,ndim) 
   double precision, intent(in) :: deltat
   double precision, intent(in) :: forcing(3),dforcingdt(3)
@@ -58,37 +58,37 @@ subroutine cr12_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
   double precision u(n,ndim), dadu(n,ndim,ndim)
   double precision dadt(n,ndim), du(n,ndim)
 
-  double precision, dimension(n) :: alpha, beta0, beta1, beta2, &
-                                    delta, gammapre, gammaobl, omega, f
+  double precision, dimension(n) :: alpha, & 
+    kappa, lambda,  gammapre, gammaobl, omega, f, Vprime, Vprimeprime
       
 
   u  = state(:,:)
   du = ds(:,:)
 
   alpha    = par(:,1)
-  beta0    = par(:,2)
-  beta1    = par(:,3)
-  beta2    = par(:,4)
-  delta    = par(:,5)
-  gammapre = par(:,6)
-  gammaobl = par(:,7)
-  omega    = par(:,8)
+  kappa    = par(:,2)
+  lambda   = par(:,3)
+  gammapre = par(:,4)
+  gammaobl = par(:,5)
+  omega    = par(:,6)
 
   dt = deltat / omega
 
   f =  gammapre * forcing(1) + gammaobl * forcing(3)
+  Vprime = alpha - u(:,2) + u(:,2)**3
+  Vprimeprime = - 1 + 3*u(:,2)**2
 
   !  first-order time derivatives
-  kk1(:,1)   =   beta0 + beta1 * u(:,1) - beta2 * (u(:,1)**3 - u(:,1) ) - delta * u(:,2) + f
-  kk1(:,2)   =   alpha * delta * ( u(:,1) - u(:,2)*u(:,2)*u(:,2) / 3. + u(:,2) )
+  kk1(:,1)   =  ( -Vprime - kappa * u(:,1) - u(:,2)*f  ) 
+  kk1(:,2)   =  lambda * u(:,1)
 
 
   !  jacobian for runge-kutta
 
-  dadu(:,1,1)  =  beta1 - beta2 * (3 * u(:,1)*u(:,1) - 1 ) 
-  dadu(:,1,2)  =  -1
-  dadu(:,2,1)  =  alpha * delta 
-  dadu(:,2,2)  =  alpha * delta * (- u(:,2) * u(:,2) + 1. ) 
+  dadu(:,1,1)  =  - kappa 
+  dadu(:,1,2)  =  - ( Vprimeprime - f )
+  dadu(:,2,1)  =  0
+  dadu(:,2,2)  =  lambda
 
   !  differential elements for calculating lyapunov
 
@@ -96,7 +96,7 @@ subroutine cr12_f(state,n,ndim,npar,par,forcing, dforcingdt, deltat,dy,ds,dl)
   da(:,2) = dadu(:,2,1) * du(:,1) + dadu(:,2,2) * du(:,2)
 
   !  time derivatives for runge-kutta
-  dadt(:,1)  =  (gammapre * dforcingdt(1) + gammaobl * dforcingdt(3))  !!! suppressed da1dt on 08.03.2018
+  dadt(:,1)  =  -u(:,2) * (gammapre * dforcingdt(1) + gammaobl * dforcingdt(3)) 
   dadt(:,2)  = 0. 
 
   ! runge-kutta fourth order scheme

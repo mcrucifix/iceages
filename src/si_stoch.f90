@@ -48,7 +48,7 @@
   double precision, intent(out), dimension(n,ndim) :: dy
 
   ! auxiliary variables
-  integer i,m, info
+  integer i,j,m, info
   integer, dimension(n) :: ipiv
   double precision, dimension(ndim) :: rhstmp
   double precision, dimension(n,ndim) :: rhs
@@ -58,25 +58,27 @@
     amat = 0.
     forall (m=1:n)
       forall (i=1:ndim) amat(m,i,i)=1.
-        amat(m,:,:) = amat(m,:,:) - 0.5*dadx(m,:,:) * dt(m)
+        amat(m,:,:) = amat(m,:,:) - 0.5*dadx(m,:,:) * dt(m)  
     end forall
 
 
 !    now constructs the right hand side vector
     forall (i=1:ndim)  
-     rhs (:,i) =  state(:,i) + (a(:,i) - 0.5*(dadx(:,i,1)*state(:,1) &
-                     + dadx(:,i,2)*state(:,2) -dadt(:,i) * dt)) * dt &
-                     + b(:,i) * dw(:,i) *sdt
+     rhs (:,i) =  state(:,i) + (a(:,i) + 0.5 * (dadt(:,i)) * dt) * dt
+     forall (j=1:ndim)
+       rhs (:,i) =  rhs(:,i) - 0.5*(dadx(:,i,j)*state(:,j)) * dt 
+     end forall 
+     rhs (:,i) =  rhs(:,i) + b(:,i) * dw(:,i) *sdt
     end forall
 !     now the equation to be solved is  amat * x = rhs
 !     use lapack
 
-    do m=1,n
-       amattmp = amat(m,:,:)
-       rhstmp  = rhs(m,:)
-       call dgesv( ndim,  1,  amattmp,  ndim,  ipiv,  rhstmp,  ndim,  info)
-       rhs(m,:)=rhstmp(:)
-    enddo
+   do m=1,n
+      amattmp = amat(m,:,:)
+      rhstmp  = rhs(m,:)
+      call dgesv( ndim,  1,  amattmp,  ndim,  ipiv,  rhstmp,  ndim,  info)
+      rhs(m,:)=rhstmp(:)
+   enddo
 
     dy = rhs - state
     end

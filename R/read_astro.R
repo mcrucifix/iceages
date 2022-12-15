@@ -25,10 +25,13 @@
 # R Code developed for R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 # ------------------------------------------------------------------ 
 
-read_astro <-
-function(nap=1, nao=1)
- { 
+read_astro <- function(nap=1, nao=1, sol='ber78') { 
+if (sol=='ber78') {
  pfile <- file.path(path.package("iceages"),"orig","precession.dat")
  ofile <- file.path(path.package("iceages"),"orig","obliquity.dat")
+} else if (sol=='la04') {
+ pfile <- file.path(path.package("iceages"),"orig","precess_la04_fft.dat")
+ ofile <- file.path(path.package("iceages"),"orig","obliquity_la04_fft.dat")
+ } else { stop('unavailable astro solution') }
  Astro <-  .Call("c_readinsol", nap, nao, pfile, ofile)
  }
