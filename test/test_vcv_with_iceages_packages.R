@@ -1,12 +1,12 @@
-require(iceages)
+library(iceages)
 data(models)
 
 require(mtm)
 times = seq(-500,0,0.1)
-deltat = c(0.001, 0.01, 0.1)
+deltat = c(0.001, 0.002, 0.01, 0.1)
 
 # uses 12 components of precession and obliquity
-Astro <- read_astro(3,0)
+Astro <- read_astro(30,30)
 
 # require(palinsol)
 # B78O <- lapply(times*1e4, ber78)
@@ -24,11 +24,10 @@ model$spar['gamma'] = 0.20
 model$spar['omega'] = 1.0
 
 sol = list()
-for (i in seq(along=deltat))
- {
+for (i in seq(along=deltat)) {
   sol[[i]] <- propagate_d (models$vcv18_d, model$spar, init=c(15,2,2), 
                           times=times, deltat=deltat[i], Astro=Astro)
- }
+ 1}
 
 i=0
 # plot(times[-1],diff(sol[[1]][,2]), type='l', xlim=c(-20,-10), ylim=c(-4,4))
